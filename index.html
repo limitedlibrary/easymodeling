@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>簡単モデリング - ちびキャラ試作</title>
+<link rel="stylesheet" href="style.css" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/three.module.min.js"
+  }
+}
+</script>
+</head>
+<body>
+<div id="app">
+  <header id="app-header">
+    <h1>簡単モデリング（試作）</h1>
+    <p class="subtitle">設定を変えて標準ちびキャラの形と配色を調整し、Blender用GLBとして書き出せます。</p>
+  </header>
+
+  <main id="app-main">
+    <section id="viewport-section">
+      <div id="viewport"></div>
+      <div id="viewport-controls">
+        <div class="control-group">
+          <span class="control-group-label">視点</span>
+          <button type="button" id="rotate-left" title="左に回転">⟲ 左回転</button>
+          <button type="button" id="rotate-right" title="右に回転">右回転 ⟳</button>
+          <button type="button" id="rotate-up" title="上に回転">上回転</button>
+          <button type="button" id="rotate-down" title="下に回転">下回転</button>
+          <button type="button" id="zoom-in" title="ズームイン">ズーム +</button>
+          <button type="button" id="zoom-out" title="ズームアウト">ズーム -</button>
+          <button type="button" id="reset-camera" title="正面に戻す">正面に戻す</button>
+        </div>
+        <p class="hint">マウスドラッグで回転、ホイールでズームもできます。</p>
+      </div>
+      <div id="status-area" role="status"></div>
+    </section>
+
+    <aside id="controls-panel">
+      <section class="panel-block">
+        <h2>体型</h2>
+        <label class="slider-row">
+          <span class="slider-label">頭の大きさ</span>
+          <input type="range" id="slider-headSize" min="0.6" max="1.6" step="0.01" />
+          <span class="slider-value" id="value-headSize"></span>
+        </label>
+        <label class="slider-row">
+          <span class="slider-label">胴体の長さ</span>
+          <input type="range" id="slider-torsoLength" min="0.6" max="1.6" step="0.01" />
+          <span class="slider-value" id="value-torsoLength"></span>
+        </label>
+        <label class="slider-row">
+          <span class="slider-label">胴体の幅</span>
+          <input type="range" id="slider-torsoWidth" min="0.6" max="1.6" step="0.01" />
+          <span class="slider-value" id="value-torsoWidth"></span>
+        </label>
+        <label class="slider-row">
+          <span class="slider-label">腕の長さ</span>
+          <input type="range" id="slider-armLength" min="0.6" max="1.6" step="0.01" />
+          <span class="slider-value" id="value-armLength"></span>
+        </label>
+        <label class="slider-row">
+          <span class="slider-label">脚の長さ</span>
+          <input type="range" id="slider-legLength" min="0.6" max="1.6" step="0.01" />
+          <span class="slider-value" id="value-legLength"></span>
+        </label>
+        <label class="slider-row">
+          <span class="slider-label">髪の長さ</span>
+          <input type="range" id="slider-hairLength" min="0.2" max="1.8" step="0.01" />
+          <span class="slider-value" id="value-hairLength"></span>
+        </label>
+      </section>
+
+      <section class="panel-block">
+        <h2>配色</h2>
+        <label class="color-row">
+          <span class="slider-label">肌の色</span>
+          <input type="color" id="color-skin" />
+        </label>
+        <label class="color-row">
+          <span class="slider-label">髪の色</span>
+          <input type="color" id="color-hair" />
+        </label>
+        <label class="color-row">
+          <span class="slider-label">服の色</span>
+          <input type="color" id="color-clothes" />
+        </label>
+      </section>
+
+      <section class="panel-block">
+        <h2>設定の保存・復元</h2>
+        <div class="button-row">
+          <button type="button" id="btn-reset">設定を初期化</button>
+          <button type="button" id="btn-save-json">JSON保存</button>
+          <button type="button" id="btn-load-json">JSON読み込み</button>
+          <input type="file" id="file-load-json" accept="application/json,.json" hidden />
+        </div>
+        <p id="json-error" class="error-message" role="alert"></p>
+      </section>
+
+      <section class="panel-block">
+        <h2>書き出し</h2>
+        <div class="button-row">
+          <button type="button" id="btn-export-glb">GLBを書き出す</button>
+        </div>
+        <p class="hint">キャラクターのみを書き出します（床・背景・確認用ライトは含みません）。</p>
+      </section>
+    </aside>
+  </main>
+
+  <footer id="app-footer">
+    <p>Three.js r160 を同梱して使用しています（<a href="vendor/three/LICENSE">ライセンス</a>）。通信なしで起動できます。</p>
+  </footer>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
