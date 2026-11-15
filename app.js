@@ -90,7 +90,13 @@ function resizeRendererToDisplaySize() {
   const width = viewportEl.clientWidth;
   const height = viewportEl.clientHeight;
   if (width === 0 || height === 0) return;
-  const needResize = renderer.domElement.width !== width || renderer.domElement.height !== height;
+  // 描画バッファのピクセル数はCSSサイズ×devicePixelRatioになるため、
+  // 表示倍率が100%でない環境(125%/200%など)でも正しく比較する
+  const pixelRatio = renderer.getPixelRatio();
+  const targetWidth = Math.round(width * pixelRatio);
+  const targetHeight = Math.round(height * pixelRatio);
+  const needResize =
+    renderer.domElement.width !== targetWidth || renderer.domElement.height !== targetHeight;
   if (needResize) {
     renderer.setSize(width, height, false);
     camera.aspect = width / height;

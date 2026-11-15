@@ -116,27 +116,36 @@ export function buildCharacter(params, colors) {
   arms.name = "Arms_Group";
   const armAttachY = hipY + torsoLength * 0.86;
   const armSpacing = torsoWidth / 2 + armRadius * 0.9;
+  const handRadius = armRadius * 1.05;
+  // 体格（脚・胴体の長さ）に対して腕が長すぎる場合、手が床を突き抜けないように上限を設ける
+  const minArmLength = 2 * armRadius + 0.04;
+  const maxArmLengthByFloor = armAttachY - handRadius;
+  const effectiveArmLength = clamp(
+    armLength,
+    minArmLength,
+    Math.max(maxArmLengthByFloor, minArmLength)
+  );
   for (const side of ["L", "R"]) {
     const sign = side === "L" ? -1 : 1;
     const armGroup = new THREE.Group();
     armGroup.name = `Arm_${side}_Group`;
     armGroup.position.set(sign * armSpacing, armAttachY, 0);
 
-    const cylLen = Math.max(armLength - 2 * armRadius, 0.04);
+    const cylLen = Math.max(effectiveArmLength - 2 * armRadius, 0.04);
     const armMesh = new THREE.Mesh(
       new THREE.CapsuleGeometry(armRadius, cylLen, 4, 10),
       materials.skin
     );
     armMesh.name = `Arm_${side}`;
-    armMesh.position.y = -armLength / 2;
+    armMesh.position.y = -effectiveArmLength / 2;
     armGroup.add(armMesh);
 
     const handMesh = new THREE.Mesh(
-      new THREE.SphereGeometry(armRadius * 1.05, 10, 8),
+      new THREE.SphereGeometry(handRadius, 10, 8),
       materials.skin
     );
     handMesh.name = `Hand_${side}`;
-    handMesh.position.y = -armLength;
+    handMesh.position.y = -effectiveArmLength;
     armGroup.add(handMesh);
 
     arms.add(armGroup);
@@ -180,8 +189,9 @@ export function buildCharacter(params, colors) {
   const hairGroup = new THREE.Group();
   hairGroup.name = "Hair_Group";
   hairGroup.position.y = headCenterY;
+  // 目・口より上で止め、顔の正面が髪で隠れないようにする
   const cap = new THREE.Mesh(
-    new THREE.SphereGeometry(headRadius * 1.04, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.62),
+    new THREE.SphereGeometry(headRadius * 1.04, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.42),
     materials.hair
   );
   cap.name = "Hair_Cap";
