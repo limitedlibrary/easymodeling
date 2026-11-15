@@ -93,8 +93,8 @@ function resizeRendererToDisplaySize() {
   // 描画バッファのピクセル数はCSSサイズ×devicePixelRatioになるため、
   // 表示倍率が100%でない環境(125%/200%など)でも正しく比較する
   const pixelRatio = renderer.getPixelRatio();
-  const targetWidth = Math.round(width * pixelRatio);
-  const targetHeight = Math.round(height * pixelRatio);
+  const targetWidth = Math.floor(width * pixelRatio);
+  const targetHeight = Math.floor(height * pixelRatio);
   const needResize =
     renderer.domElement.width !== targetWidth || renderer.domElement.height !== targetHeight;
   if (needResize) {
